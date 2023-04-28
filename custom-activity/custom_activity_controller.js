@@ -93,7 +93,7 @@ controller.execute = async (req, res) => {
     // console.log('actvityId:', activityId);
     // console.log('actvityInstanceId:', activityInstanceId);
     // console.log('messageType:', messageType);
-    // console.log('messageName:', messageName);
+    console.log('messageName:', messageName);
     
     const filter = {
         'leftOperand' : subscriberKeyField, 
@@ -103,12 +103,12 @@ controller.execute = async (req, res) => {
 
     try {
         const targetRecords = await mc.getDERows(dataExtensionName, targetFields, filter); 
-
+        console.log('get DE row');
         if(targetRecords && targetRecords.length > 0){
             const record = targetRecords[0]; 
             const fields = 'meta';
             const recipient_id = record[recipientId];
-
+            console.log('Enter target record', targetRecords);
             let oaRecords = await mc.getDERows(config.MC.viberDEName, ['token', 'Viber_OA_Name', 'Avatar'], {
                 'leftOperand' : 'Viber_OA_Id', 
                 'operator' : 'equals',
@@ -131,7 +131,9 @@ controller.execute = async (req, res) => {
             }
             
             //File message
+            console.log('File message');
             if(content.meta.options.customBlockData.type === 'notice') {
+                console.log('Enter File message 1');
                 let fileName = content.meta.options.customBlockData.fileName,
                 fileType = content.meta.options.customBlockData.fileType,
                 fileId = content.meta.options.customBlockData.fileId,
@@ -143,7 +145,7 @@ controller.execute = async (req, res) => {
                     url : fileUrl,
                     responseType : 'Stream',
                 });
-
+                console.log('enter File message 2');    
                 const zaloFileResponse = await zalo.uploadFile(token, fileResponse.data, fileName);
                 const zaloFileToken = zaloFileResponse.data.data.token;
                 contentMessage.attachment.payload.token = zaloFileToken;
@@ -161,15 +163,19 @@ controller.execute = async (req, res) => {
                 "type":"text",
                 "text": ("text" in contentMessage ? contentMessage.text : contentMessage)
              };
+             console.log('messengerPayload ',messengerPayload);
+
              logger.info('[Viber Request]' + '= ' +  JSON.stringify(messengerPayload));
             let messengerResponse = undefined;
             try {
                 const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
                 messengerResponse = messengerResponseFull.data;
+                console.log('Enter Send message ',messengerResponse);
             } catch(err) {
                 if (err.response.data) {
                     messengerResponse = err.response.data;
                     console.log("err->", err.response.data);
+                    console.log('Enter Send message error',messengerResponse);
                 }
             } 
             const mcRecord = { 
@@ -181,6 +187,9 @@ controller.execute = async (req, res) => {
                 'Journey_Activity_ID': activityInstanceId,
                 'Message_Type': messageType
             };
+
+            console.log('After Send message ',mcRecord);
+
             logger.info('[Viber Response]' + '= ' +  JSON.stringify(messengerResponse));
             if(messengerResponse != undefined && "message_token" in messengerResponse) {
                 mcRecord['Message_ID'] = messengerResponse.message_token;
