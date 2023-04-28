@@ -103,11 +103,16 @@ controller.execute = async (req, res) => {
 
     try {
         const targetRecords = await mc.getDERows(dataExtensionName, targetFields, filter); 
-        console.log('get DE row');
+        console.log('get DE row',targetRecords);
+        console.log('dataExtensionName la ',dataExtensionName);
+        console.log('targetFields ',targetFields);
+        console.log('filter ',filter);
         if(targetRecords && targetRecords.length > 0){
+            console.log('enter target record');
             const record = targetRecords[0]; 
             const fields = 'meta';
             const recipient_id = record[recipientId];
+            console.log('recipient_id ', recipient_id);
             console.log('Enter target record', targetRecords);
             let oaRecords = await mc.getDERows(config.MC.viberDEName, ['token', 'Viber_OA_Name', 'Avatar'], {
                 'leftOperand' : 'Viber_OA_Id', 
