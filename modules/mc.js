@@ -36,17 +36,21 @@ mc.getDERows =  (dataExtensionName, fields, filter) => {
 
         if(filter)
             options.filter = filter;
-
+        logger.info('Filter là '+ filter)
         let lData= [];
         let deRow = IET_Client.dataExtensionRow(options);
 
+        logger.info('derow la ' + deRow)
         deRow.get((err, response) => {
+            logger.info('Derow.get ' + response)
             if (err) {
                 logger.error('[mc.getDERows] - Error: ' + JSON.stringify(err));
                 reject(err);
             } 
             else {
+                logger.info('ko bi loi ')
                 let hasRows = response.body.Results.length > 0 && 'Properties' in response.body.Results[0] && 'Property' in response.body.Results[0]['Properties'];
+                logger.info('Has row la ' + hasRows)
                 if (hasRows) {
                     let body = response.body.Results;
                     
@@ -68,7 +72,7 @@ mc.getDERows =  (dataExtensionName, fields, filter) => {
                         }
                         
                         lData.push(data);
-
+                        logger('data la ' + data)
                     });
                     
                     resolve(lData);
