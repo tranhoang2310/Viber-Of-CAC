@@ -119,12 +119,15 @@ controller.execute = async (req, res) => {
                 'operator' : 'equals',
                 'rightOperand' : oa
             });
+
+            console.log('oaRecords ', oaRecords);
             const token = oaRecords[0].token; 
             oaName = oaRecords[0].Viber_OA_Name;
             const avatar =  oaRecords[0].Avatar;
             const content = await mc.getContentById(contentId, fields); 
+            console.log('content ', content);
             let contentMessage = content.meta.options.customBlockData.message;
-
+            console.log('contentMessage ', contentMessage);
             //Only personalize the content for 3 types of messages
             if(content.meta.options.customBlockData.type === 'text-area' || content.meta.options.customBlockData.type === 'form-photo'
             || content.meta.options.customBlockData.type === 'list-button'){

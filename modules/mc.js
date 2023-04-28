@@ -36,13 +36,13 @@ mc.getDERows =  (dataExtensionName, fields, filter) => {
 
         if(filter)
             options.filter = filter;
-        console.log('Filter là '+ filter)
+        console.log('Filter là '+ JSON.stringify(filter))
         let lData= [];
         let deRow = IET_Client.dataExtensionRow(options);
 
-        console.log('derow la ' + deRow)
+        console.log('derow la ' + JSON.stringify(deRow))
         deRow.get((err, response) => {
-            console.log('Derow.get ' + response)
+            console.log('Derow.get ' + JSON.stringify(response))
             if (err) {
                 logger.error('[mc.getDERows] - Error: ' + JSON.stringify(err));
                 reject(err);
@@ -72,7 +72,7 @@ mc.getDERows =  (dataExtensionName, fields, filter) => {
                         }
                         
                         lData.push(data);
-                        logger('data la ' + data)
+                        
                     });
                     
                     resolve(lData);
