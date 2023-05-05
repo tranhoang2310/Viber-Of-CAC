@@ -31,6 +31,10 @@ app.post(/^\/webhook\/(.*)/, (req, res) => {
   webhook.process(req, res);
 })
 
+app.get(/^\/webhook\/(.*)/, (req, res) => {
+  webhook.process(req, res);
+})
+
 app.listen(PORT, () => {
     console.log('Server is listening on port ', PORT);
 });
