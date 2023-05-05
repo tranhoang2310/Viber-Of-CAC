@@ -64,6 +64,9 @@ controller.execute = async (req, res) => {
     
     let obj = req.body.inArguments[0];
 
+    console.log('Chu Y!!!');
+    console.log('Object la :',obj);
+
     let oa = obj.oa,
         oaName = obj.oaName, 
         contactKey = obj.contactKey, 
