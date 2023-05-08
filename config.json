@@ -8,9 +8,9 @@
         "force": "standard",
         "fbDEName": "Facebook Messenger",
         "fbSendLogDE": "Messenger_Send_Tracking",
-        "viberDEName": "Viber OA",
-        "viberSendLogDE": "Viber_Send_Tracking",
-        "viberSubcriberDE": "Viber_Subscribers",
+        "viberDEName": "Viber OA_NSBV",
+        "viberSendLogDE": "Viber_Send_Tracking_NSBV",
+        "viberSubcriberDE": "Viber_Subscribers_NSBV",
         "ZaloSendLogDE": "Zalo_Send_Tracking",
         "ZaloReceiveLogDE": "Zalo_Receive_Tracking",
         "ZaloSubcriberDE": "Zalo_Subscribers"
