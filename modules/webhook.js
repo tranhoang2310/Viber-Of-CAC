@@ -15,6 +15,8 @@ webhook.process = async (req, res) => {
     console.log('REQ PARAM ',req.params);
     console.log('ALL REQ ',req.query);
 
+    const STEL_Event = req.query;
+
     try {
       switch (event.event) {
         case 'conversation_started':
@@ -209,9 +211,50 @@ webhook.process = async (req, res) => {
       logger.error('[Exception in webhook]', ex);
     }
 
+    //HoangT - 08/05/2023
+    try{
+      switch (STEL_Event.status) {
+        case 'follow':
+          const mes_userId = STEL_Event.to;
+          const mes_fields = ['Id', 'Name', 'Status', 'Lang', 'Avatar_url', 'Country', 'Subscribe_Date', 'Unsubscribe_Date'];
+          const mes_filter = {
+            leftOperand: 'Id',
+            operator: 'equals',
+            rightOperand: mes_userId
+          };
+          const mes_rows = await mc.getDERows(config.MC.viberSubcriberDE, mes_fields, mes_filter);
+          //console.log("event [message] - retrieve result :", mes_rows);
+          if(mes_rows == undefined || mes_rows.length == 0) {
+            const record = {
+              'Id' : mes_userId,
+              //'Name':  event.sender.name,
+              'Status' : STEL_Event.event,
+              //'Lang' : event.sender.language,
+              //'Country': event.sender.country,
+              'Avatar_url': event.sender.avatar,
+              'Viber_OA': STEL_Event.from,
+              'Subscribe_Date':  new Date(parseInt(STEL_Event.delivery_time)).toISOString()
+            };
+            mc.createDERow(config.MC.viberSubcriberDE, record);
+          } else if (mes_rows.length >= 0) {
+            const updatedRecord = mes_rows[0];
+            updatedRecord['Status'] = 'follow';
+            if (updatedRecord['Subscribe_Date'] == null || updatedRecord['Subscribe_Date'] == undefined || updatedRecord['Subscribe_Date'] == ''
+              || (updatedRecord['Subscribe_Date'] != '' && updatedRecord['Unsubscribe_Date'] != '' && new Date(updatedRecord['Subscribe_Date']) <= new Date(updatedRecord['Unsubscribe_Date'])  )
+            ) {
+              delete updatedRecord['Unsubscribe_Date'];
+              updatedRecord['Subscribe_Date'] = new Date(parseInt(STEL_Event.delivery_time)).toISOString();
+              mc.updateDERow(config.MC.viberSubcriberDE, updatedRecord);
+            }
+          }
+          break;
+        }
+    }
+    catch(ex){
+      logger.error('[Exception in webhook]', ex);
+    }
+
     res.sendStatus(200);
 }
-
-
 
 module.exports = webhook; 
