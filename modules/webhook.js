@@ -231,7 +231,7 @@ webhook.process = async (req, res) => {
               'Status' : STEL_Event.event,
               //'Lang' : event.sender.language,
               //'Country': event.sender.country,
-              'Avatar_url': event.sender.avatar,
+              //'Avatar_url': event.sender.avatar,
               'Viber_OA': STEL_Event.from,
               'Subscribe_Date':  new Date(parseInt(STEL_Event.delivery_time)).toISOString()
             };
