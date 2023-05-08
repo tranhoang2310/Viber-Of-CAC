@@ -13,6 +13,7 @@ webhook.process = async (req, res) => {
     console.log('req.body:', req.body);
     console.log('req.body.message:', req.body.message);
     console.log('REQ PARAM ',req.params);
+    console.log('ALL REQ ',req);
 
     try {
       switch (event.event) {
