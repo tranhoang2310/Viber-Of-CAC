@@ -223,15 +223,10 @@ webhook.process = async (req, res) => {
             rightOperand: mes_userId
           };
           const mes_rows = await mc.getDERows(config.MC.viberSubcriberDE, mes_fields, mes_filter);
-          //console.log("event [message] - retrieve result :", mes_rows);
           if(mes_rows == undefined || mes_rows.length == 0) {
             const record = {
               'Id' : mes_userId,
-              //'Name':  event.sender.name,
-              'Status' : STEL_Event.event,
-              //'Lang' : event.sender.language,
-              //'Country': event.sender.country,
-              //'Avatar_url': event.sender.avatar,
+              'Status' : STEL_Event.status,
               'Viber_OA': STEL_Event.from,
               'Subscribe_Date':  new Date(parseInt(STEL_Event.delivery_time)).toISOString()
             };
@@ -248,6 +243,31 @@ webhook.process = async (req, res) => {
             }
           }
           break;
+
+          case 'unfollow':
+            const userId = STEL_Event.to;
+            const fields = ['Id', 'Status', 'Unsubscribe_Date'];
+            const filter = {
+              leftOperand: 'Id',
+              operator: 'equals',
+              rightOperand: userId
+            };
+            const rows = await mc.getDERows(config.MC.viberSubcriberDE, fields, filter);
+            if(rows == undefined || rows.length == 0) {
+              const record = {
+                'Id' : userId,
+                'Status': 'unfollow',
+                'Viber_OA': STEL_Event.from,
+                'Unsubscribe_Date':  new Date(parseInt(event.timestamp)).toISOString()
+              };
+              mc.createDERow(config.MC.viberSubcriberDE, record);
+            } else if (rows.length >= 0) {
+              const updatedRecord = rows[0];
+              updatedRecord['Status'] = 'unfollow';
+              updatedRecord['Unsubscribe_Date'] = new Date(parseInt(event.timestamp)).toISOString();
+              mc.updateDERow(config.MC.viberSubcriberDE, updatedRecord);
+            }
+            break;
         }
     }
     catch(ex){
