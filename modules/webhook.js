@@ -258,13 +258,13 @@ webhook.process = async (req, res) => {
                 'Id' : userId,
                 'Status': 'unfollow',
                 'Viber_OA': STEL_Event.from,
-                'Unsubscribe_Date':  new Date(parseInt(event.timestamp)).toISOString()
+                'Unsubscribe_Date':  new Date(parseInt(STEL_Event.delivery_time)).toISOString()
               };
               mc.createDERow(config.MC.viberSubcriberDE, record);
             } else if (rows.length >= 0) {
               const updatedRecord = rows[0];
               updatedRecord['Status'] = 'unfollow';
-              updatedRecord['Unsubscribe_Date'] = new Date(parseInt(event.timestamp)).toISOString();
+              updatedRecord['Unsubscribe_Date'] = new Date(parseInt(STEL_Event.delivery_time)).toISOString();
               mc.updateDERow(config.MC.viberSubcriberDE, updatedRecord);
             }
             break;
