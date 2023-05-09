@@ -64,8 +64,8 @@ controller.execute = async (req, res) => {
     
     let obj = req.body.inArguments[0];
 
-    // console.log('Chu Y!!!');
-    // console.log('Object la :',obj);
+    console.log('Chu Y!!!');
+    console.log('Object la :',obj);
 
     let oa = obj.oa,
         oaName = obj.oaName, 
@@ -84,19 +84,19 @@ controller.execute = async (req, res) => {
         messageName = obj.messageName;
         //messageTagType = obj.messageTagType;
 
-    // console.log('contactKey:', contactKey);
-    // console.log('oa:', oa); 
-    // console.log('contentId:', contentId);
-    // console.log('dataExtensionKey:', dataExtensionKey);
-    // console.log('dataExtensionName:', dataExtensionName);
-    // console.log('subscriberKeyField:', subscriberKeyField);
-    // console.log('zaloIdField:', zaloIdField);
-    // console.log('targetField:', targetFields);
-    // console.log('journeyId:', journeyId);
-    // console.log('actvityId:', activityId);
-    // console.log('actvityInstanceId:', activityInstanceId);
-    // console.log('messageType:', messageType);
-    // console.log('messageName:', messageName);
+    console.log('contactKey:', contactKey);
+    console.log('oa:', oa); 
+    console.log('contentId:', contentId);
+    console.log('dataExtensionKey:', dataExtensionKey);
+    console.log('dataExtensionName:', dataExtensionName);
+    console.log('subscriberKeyField:', subscriberKeyField);
+    console.log('zaloIdField:', zaloIdField);
+    console.log('targetField:', targetFields);
+    console.log('journeyId:', journeyId);
+    console.log('actvityId:', activityId);
+    console.log('actvityInstanceId:', activityInstanceId);
+    console.log('messageType:', messageType);
+    console.log('messageName:', messageName);
     
     const filter = {
         'leftOperand' : subscriberKeyField, 
