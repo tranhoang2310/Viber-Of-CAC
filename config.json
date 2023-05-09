@@ -42,7 +42,6 @@
         "UploadFile_Endpoint" : "https://openapi.zalo.me/v2.0/oa/upload/file"
     },
     "Viber" : {
-        //"Viber_Endpoint" : "https://chatapi.viber.com/pa/send_message",
         "UploadFile_Endpoint" : "https://openapi.zalo.me/v2.0/oa/upload/file",
         "Viber_Endpoint" : "https://api-02.worldsms.vn/webapi/sendVIBER"
     }
