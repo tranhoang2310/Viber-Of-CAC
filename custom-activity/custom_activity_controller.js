@@ -64,8 +64,8 @@ controller.execute = async (req, res) => {
     
     let obj = req.body.inArguments[0];
 
-    console.log('Chu Y!!!');
-    console.log('Object la :',obj);
+    // console.log('Chu Y!!!');
+    // console.log('Object la :',obj);
 
     let oa = obj.oa,
         oaName = obj.oaName, 
@@ -84,19 +84,19 @@ controller.execute = async (req, res) => {
         messageName = obj.messageName;
         //messageTagType = obj.messageTagType;
 
-    console.log('contactKey:', contactKey);
-    console.log('oa:', oa); 
-    console.log('contentId:', contentId);
-    console.log('dataExtensionKey:', dataExtensionKey);
-    console.log('dataExtensionName:', dataExtensionName);
-    console.log('subscriberKeyField:', subscriberKeyField);
-    console.log('zaloIdField:', zaloIdField);
-    console.log('targetField:', targetFields);
-    console.log('journeyId:', journeyId);
-    console.log('actvityId:', activityId);
-    console.log('actvityInstanceId:', activityInstanceId);
-    console.log('messageType:', messageType);
-    console.log('messageName:', messageName);
+    // console.log('contactKey:', contactKey);
+    // console.log('oa:', oa); 
+    // console.log('contentId:', contentId);
+    // console.log('dataExtensionKey:', dataExtensionKey);
+    // console.log('dataExtensionName:', dataExtensionName);
+    // console.log('subscriberKeyField:', subscriberKeyField);
+    // console.log('zaloIdField:', zaloIdField);
+    // console.log('targetField:', targetFields);
+    // console.log('journeyId:', journeyId);
+    // console.log('actvityId:', activityId);
+    // console.log('actvityInstanceId:', activityInstanceId);
+    // console.log('messageType:', messageType);
+    // console.log('messageName:', messageName);
     
     const filter = {
         'leftOperand' : subscriberKeyField, 
@@ -118,7 +118,7 @@ controller.execute = async (req, res) => {
             const recipient_id = record[recipientId];
             console.log('recipient_id ', recipient_id);
             console.log('Enter target record', targetRecords);
-            let oaRecords = await mc.getDERows(config.MC.viberDEName, ['token', 'Viber_OA_Name', 'Avatar'], {
+            let oaRecords = await mc.getDERows(config.MC.viberDEName, ['token', 'Viber_OA_Name', 'Avatar','Viber_OA_Id'], {
                 'leftOperand' : 'Viber_OA_Id', 
                 'operator' : 'equals',
                 'rightOperand' : oa
@@ -127,6 +127,7 @@ controller.execute = async (req, res) => {
             console.log('oaRecords ', oaRecords);
             const token = oaRecords[0].token; 
             oaName = oaRecords[0].Viber_OA_Name;
+            let oa_ID = oaRecords[0].Viber_OA_Id; // HoangT - add this field
             const avatar =  oaRecords[0].Avatar;
             const content = await mc.getContentById(contentId, fields); 
             console.log('content ', content);
@@ -163,33 +164,52 @@ controller.execute = async (req, res) => {
                 contentMessage.attachment.payload.token = zaloFileToken;
 
             }
-
+            
+            //FOR CHAT BOT - VIBER
+            // let messengerPayload = {
+            //     "receiver":recipient_id,
+            //     "min_api_version":1,
+            //     "sender":{
+            //        "name": oaName,
+            //        "avatar":avatar
+            //     },
+            //     "tracking_data":"tracking data",
+            //     "type":"text",
+            //     "text": ("text" in contentMessage ? contentMessage.text : contentMessage)
+            //  };
+            
+            //FOR SOUTH TELECOM REQUEST - HoangT
+            let req_id = new Date(Date.now()).toISOString();
+            let client_req_id = req_id + ' ' + recipient_id;
             let messengerPayload = {
-                "receiver":recipient_id,
-                "min_api_version":1,
-                "sender":{
-                   "name": oaName,
-                   "avatar":avatar
-                },
-                "tracking_data":"tracking data",
-                "type":"text",
+                "from": oa_ID,
+                "to":recipient_id,
+                "client_req_id":client_req_id,
+                "dlr":1,
                 "text": ("text" in contentMessage ? contentMessage.text : contentMessage)
              };
+            
+             console.log('HoangT - Check Request')
              console.log('messengerPayload ',messengerPayload);
 
              logger.info('[Viber Request]' + '= ' +  JSON.stringify(messengerPayload));
             let messengerResponse = undefined;
-            try {
-                const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
-                messengerResponse = messengerResponseFull.data;
-                console.log('Enter Send message ',messengerResponse);
-            } catch(err) {
-                if (err.response.data) {
-                    messengerResponse = err.response.data;
-                    console.log("err->", err.response.data);
-                    console.log('Enter Send message error',messengerResponse);
-                }
-            } 
+
+            //SEND MESSAGE - POST REQUEST
+            // try {
+            //     const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
+            //     messengerResponse = messengerResponseFull.data;
+            //     console.log('Enter Send message ',messengerResponse);
+            // } catch(err) {
+            //     if (err.response.data) {
+            //         messengerResponse = err.response.data;
+            //         console.log("err->", err.response.data);
+            //         console.log('Enter Send message error',messengerResponse);
+            //     }
+            // } 
+            
+            //Internal Tracking Sent Messages
+            /*
             const mcRecord = { 
                 'Viber_Id': oa, 
                 "Receiver_Id": recipient_id,
@@ -213,7 +233,7 @@ controller.execute = async (req, res) => {
                 mcRecord['Message_ID'] = `ERROR(${messengerResponse.error.code})_${Date.now()}`;
             }
         
-            //Tracking Sent Messages
+            Internal Tracking Sent Messages
             mc.createDERow(config.MC.viberSendLogDE, mcRecord)
             .then(mcResponse => {
                 logger.info('MC Response:', mcResponse);
@@ -223,6 +243,7 @@ controller.execute = async (req, res) => {
             res.status(200).send({
                 status: 'ok',
             });
+            */
         }
     }
     catch(err) {

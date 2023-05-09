@@ -17,6 +17,7 @@ webhook.process = async (req, res) => {
 
     const STEL_Event = req.query;
 
+    /*
     try {
       switch (event.event) {
         case 'conversation_started':
@@ -209,7 +210,9 @@ webhook.process = async (req, res) => {
     }
     catch(ex){
       logger.error('[Exception in webhook]', ex);
-    }
+    } 
+    */
+
 
     //HoangT - 08/05/2023
     try{
@@ -267,6 +270,85 @@ webhook.process = async (req, res) => {
               updatedRecord['Unsubscribe_Date'] = new Date(parseInt(STEL_Event.delivery_time)).toISOString();
               mc.updateDERow(config.MC.viberSubcriberDE, updatedRecord);
             }
+            break;
+
+            //Status = 0 => Error
+            //Tracking Sent Messages : DRL
+            case '0':
+            const mcRecord = { 
+                'API_Response_Error': STEL_Event.otterrorcode,
+                'Viber_Id': STEL_Event.from, 
+                'Receiver_Id': STEL_Event.to,
+                'Sent_Date': new Date(parseInt(STEL_Event.receivedts)).toISOString(),
+                'Delivery_Date': new Date(parseInt(STEL_Event.deliveredts)).toISOString(),
+                'Message_Content': STEL_Event.text,
+                'Message_Type': STEL_Event.ott,
+                'Ref_Delivery' : STEL_Event.errorcode,
+                'OTTstatus' : STEL_Event.ottstatus,
+                'User' : STEL_Event.user,
+                'SMSstatus' : STEL_Event.status
+              };
+
+              console.log('STEL DLR Tracking - ERROR : Status = 0 => ',mcRecord);
+
+              //Tracking Sent Messages ERROR
+              const DLR_fields = ['API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus' ];
+              const DLR_filter = {
+                leftOperand: 'Message_ID',
+                operator: 'equals',
+                rightOperand: STEL_Event.smsid
+              };
+              const DLR_rows = await mc.getDERows(config.MC.viberSendLogDE, DLR_fields, DLR_filter);
+
+              console.log('DLR ROW IS ', DLR_rows[0]);
+
+              if(DLR_rows == undefined || rows.length == 0) {
+                mc.createDERow(config.MC.viberSendLogDE, mcRecord);
+              } 
+              else if (DLR_rows.length >= 0) {
+                const updatedRecord = DLR_rows[0];
+                Object.assign(mcRecord, updatedRecord);
+                mc.updateDERow(config.MC.viberSendLogDE, updatedRecord);
+              }
+            break;
+
+            //Status = 1 => SUCCESS
+            case '1':
+              const mc_Record = { 
+                'API_Response_Error': STEL_Event.otterrorcode,
+                'Viber_Id': STEL_Event.from, 
+                'Receiver_Id': STEL_Event.to,
+                'Sent_Date': new Date(parseInt(STEL_Event.receivedts)).toISOString(),
+                'Delivery_Date': new Date(parseInt(STEL_Event.deliveredts)).toISOString(),
+                'Message_Content': STEL_Event.text,
+                'Message_Type': STEL_Event.ott,
+                'Ref_Delivery' : STEL_Event.errorcode,
+                'OTTstatus' : STEL_Event.ottstatus,
+                'User' : STEL_Event.user,
+                'SMSstatus' : STEL_Event.status
+              };
+
+              console.log('STEL DLR Tracking - SUCCESS : Status = 0 => ',mc_Record);
+
+              //Tracking Sent Messages SUCCESS
+              const DLR_Suc_fields = ['API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus' ];
+              const DLR_Suc_filter = {
+                leftOperand: 'Message_ID',
+                operator: 'equals',
+                rightOperand: STEL_Event.smsid
+              };
+              const DLR_Suc_rows = await mc.getDERows(config.MC.viberSendLogDE, DLR_Suc_fields, DLR_Suc_filter);
+
+              console.log('DLR ROW IS ', DLR_Suc_rows[0]);
+
+              if(DLR_Suc_rows == undefined || rows.length == 0) {
+                mc.createDERow(config.MC.viberSendLogDE, mc_Record);
+              } 
+              else if (DLR_Suc_rows.length >= 0) {
+                const updatedRecord = DLR_Suc_rows[0];
+                Object.assign(mc_Record, updatedRecord);
+                mc.updateDERow(config.MC.viberSendLogDE, updatedRecord);
+              }
             break;
         }
     }

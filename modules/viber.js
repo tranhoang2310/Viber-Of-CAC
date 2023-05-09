@@ -13,7 +13,9 @@ viber.sendMessage = (token, payload) => {
         data : payload,
         headers : {
             'Content-Type': 'application/json',
-            'X-Viber-Auth-Token' : token,
+            //'X-Viber-Auth-Token' : token,
+            'Accept':'application/json',
+            'Authorization':'Basic ' + token
         }
     }
     /*
