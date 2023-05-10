@@ -277,6 +277,7 @@ webhook.process = async (req, res) => {
             //Tracking Sent Messages : DRL
             case '0':
             const mcRecord = { 
+                'Message_ID':STEL_Event.smsid,
                 'API_Response_Error': STEL_Event.otterrorcode,
                 'Viber_Id': STEL_Event.from, 
                 'Receiver_Id': STEL_Event.to,
@@ -293,7 +294,7 @@ webhook.process = async (req, res) => {
               console.log('STEL DLR Tracking - ERROR : Status = 0 => ',mcRecord);
 
               //Tracking Sent Messages ERROR
-              const DLR_fields = ['API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus' ];
+              const DLR_fields = ['Message_ID','Message_Type','API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus'];
               const DLR_filter = {
                 leftOperand: 'Message_ID',
                 operator: 'equals',
@@ -316,6 +317,7 @@ webhook.process = async (req, res) => {
             //Status = 1 => SUCCESS
             case '1':
               const mc_Record = { 
+                'Message_ID':STEL_Event.smsid,
                 'API_Response_Error': STEL_Event.otterrorcode,
                 'Viber_Id': STEL_Event.from, 
                 'Receiver_Id': STEL_Event.to,
@@ -332,7 +334,7 @@ webhook.process = async (req, res) => {
               console.log('STEL DLR Tracking - SUCCESS : Status = 1 => ',mc_Record);
 
               //Tracking Sent Messages SUCCESS
-              const DLR_Suc_fields = ['API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus' ];
+              const DLR_Suc_fields = ['Message_ID','Message_Type','API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus' ];
               const DLR_Suc_filter = {
                 leftOperand: 'Message_ID',
                 operator: 'equals',
