@@ -231,7 +231,8 @@ webhook.process = async (req, res) => {
               'Id' : mes_userId,
               'Status' : STEL_Event.status,
               'Viber_OA': STEL_Event.from,
-              'Subscribe_Date':  new Date(parseInt(STEL_Event.delivery_time)).toISOString()
+              'Subscribe_Date':  new Date(parseInt(STEL_Event.delivery_time)).toISOString(),
+              'Phone':mes_userId
             };
             mc.createDERow(config.MC.viberSubcriberDE, record);
           } else if (mes_rows.length >= 0) {
@@ -328,7 +329,7 @@ webhook.process = async (req, res) => {
                 'SMSstatus' : STEL_Event.status
               };
 
-              console.log('STEL DLR Tracking - SUCCESS : Status = 0 => ',mc_Record);
+              console.log('STEL DLR Tracking - SUCCESS : Status = 1 => ',mc_Record);
 
               //Tracking Sent Messages SUCCESS
               const DLR_Suc_fields = ['API_Response_Error','Viber_Id', 'Receiver_Id','Sent_Date','Delivery_Date','Message_Content','Ref_Delivery','OTTstatus','User' ,'SMSstatus' ];
@@ -341,7 +342,7 @@ webhook.process = async (req, res) => {
 
               console.log('DLR ROW IS ', DLR_Suc_rows[0]);
 
-              if(DLR_Suc_rows == undefined || rows.length == 0) {
+              if(DLR_Suc_rows == undefined || DLR_Suc_rows.length == 0) {
                 mc.createDERow(config.MC.viberSendLogDE, mc_Record);
               } 
               else if (DLR_Suc_rows.length >= 0) {
