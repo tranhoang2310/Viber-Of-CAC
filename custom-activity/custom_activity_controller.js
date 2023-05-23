@@ -224,9 +224,9 @@ controller.execute = async (req, res) => {
                 messengerResponse = messengerResponseFull.data;
                 console.log('Enter Send message ',messengerResponse);
             } catch(err) {
-                if (err.response.data) {
-                    messengerResponse = err.response.data;
-                    console.log("err->", err.response.data);
+                if (err) {
+                    messengerResponse = err;
+                    console.log("err->", err);
                     console.log('Enter Send message error',messengerResponse);
                 }
             } 
