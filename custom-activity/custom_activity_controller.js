@@ -197,13 +197,13 @@ controller.execute = async (req, res) => {
                     "client_req_id":client_req_id,
                     "dlr":1,
                     "template id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
-                    "template data": `{ ${contentMessage.Text} }`
+                    "template data": JSON.parse(`{ ${contentMessage.text} }`)
                  };
 
             }
             else //Nếu ko tồn tại text2a => Chỉ gửi Text Only
             {
-                messengerPayload = {
+                 messengerPayload = {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
