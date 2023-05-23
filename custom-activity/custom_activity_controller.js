@@ -221,7 +221,7 @@ controller.execute = async (req, res) => {
             //SEND MESSAGE - POST REQUEST
             try {
                 const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
-                messengerResponse = messengerResponseFull.data;
+                messengerResponse = messengerResponseFull;
                 console.log('Enter Send message ',messengerResponse);
             } catch(err) {
                 if (err) {
