@@ -1,6 +1,5 @@
 const axios = require('axios');
 const config = require('../config.json');
-const base64 = require('base-64');
 const logger = require('./logger');
 const FormData = require('form-data');
 
