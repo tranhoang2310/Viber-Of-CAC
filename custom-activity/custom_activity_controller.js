@@ -258,7 +258,7 @@ controller.execute = async (req, res) => {
                 mcRecord['Sent_Date'] = new Date(Date.now()).toISOString();
                 mcRecord['Delivery_Status'] = false;
                 mcRecord['Message_ID'] = client_req_id;
-                mcRecord['Message_ID'] = messengerResponse.errorcode;
+                mcRecord['Ref_Delivery'] = messengerResponse.errorcode;
                 console.log("Viber Fail with Error Code ", messengerResponse.errorcode);
             }
         
