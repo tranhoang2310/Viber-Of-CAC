@@ -196,8 +196,8 @@ controller.execute = async (req, res) => {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
-                    "template id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
-                    "template data": JSON.parse('{'+ contentMessage.text +'}' )
+                    "template_id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
+                    "template_data": JSON.parse('{'+ contentMessage.text +'}' )
                  };
 
             }
