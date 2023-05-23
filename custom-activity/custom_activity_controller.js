@@ -232,7 +232,6 @@ controller.execute = async (req, res) => {
             } 
             
             //Internal Tracking Sent Messages
-            /*
             const mcRecord = { 
                 'Viber_Id': oa, 
                 "Receiver_Id": recipient_id,
@@ -244,6 +243,7 @@ controller.execute = async (req, res) => {
 
             console.log('After Send message ',mcRecord);
 
+            /*
             logger.info('[Viber Response]' + '= ' +  JSON.stringify(messengerResponse));
             if(messengerResponse != undefined && "message_token" in messengerResponse) {
                 mcRecord['Message_ID'] = messengerResponse.message_token;
