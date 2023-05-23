@@ -84,6 +84,7 @@ function restoreParms() {
       }
       else if(messageType === 'form-photo'){
         document.getElementById('txtBlock2').value = objData.u.txtBlock2;
+        document.getElementById('txtBlock2a').value = objData.u.txtBlock2a;
         document.getElementById('photo').value = objData.u.photo;
       }
       else if(messageType === 'form-list'){
