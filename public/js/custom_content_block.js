@@ -149,9 +149,9 @@ function paint(messageType) {
       img = `<img src="${document.querySelector('#photo').value}" style="width:250px; height:130px;"/>`;
 
     let content = `<div style="width:300px; margin-left:auto; margin-right:auto">
-                  ${img}
-                  <div style="padding:5px; background-color:#FFF">${document.querySelector('#txtBlock2').value}</div>
                   <div style="padding:5px; background-color:#FFF">${document.querySelector('#txtBlock2a').value}</div>
+                  <div style="padding:5px; background-color:#FFF">${document.querySelector('#txtBlock2').value}</div>
+                  ${img}
                 </div>`;
 
     sdk.setContent(content);

@@ -43,6 +43,6 @@
     },
     "Viber" : {
         "UploadFile_Endpoint" : "https://openapi.zalo.me/v2.0/oa/upload/file",
-        "Viber_Endpoint" : "https://api-02.worldsms.vn/webapi/sendVIBER"
+        "Viber_Endpoint" : "https://api-04.worldsms.vn/apidebit/sendVIBER"
     }
 }

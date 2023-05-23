@@ -184,6 +184,9 @@ controller.execute = async (req, res) => {
             //FOR SOUTH TELECOM REQUEST - HoangT
             let req_id = new Date(Date.now()).toISOString();
             let client_req_id = req_id + ' ' + recipient_id;
+            
+            console.log("Check Text2a in Content ",("text2a" in contentMessage));
+            console.log("Content.Text2a ", contentMessage.text2a);
 
             if ("text2a" in contentMessage) //Nếu có tồn tại text2a => đang sử dụng Template Viber && Template ID = Text2a 
             {
