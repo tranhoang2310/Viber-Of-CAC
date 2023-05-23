@@ -150,6 +150,7 @@ function paint(messageType) {
     let content = `<div style="width:300px; margin-left:auto; margin-right:auto">
                   ${img}
                   <div style="padding:5px; background-color:#FFF">${document.querySelector('#txtBlock2').value}</div>
+                  <div style="padding:5px; background-color:#FFF">${document.querySelector('#txtBlock2a').value}</div>
                 </div>`;
 
     sdk.setContent(content);
@@ -157,10 +158,12 @@ function paint(messageType) {
       'type': messageType,
       'u' : {
         'txtBlock2' : document.querySelector('#txtBlock2').value,
+        'txtBlock2a' : document.querySelector('#txtBlock2a').value,
         'photo': document.querySelector('#photo').value
       },
       'message':{
         'text': document.querySelector('#txtBlock2').value,
+        'text2a':document.querySelector('#txtBlock2a').value,
         'attachment' : {
           'type': 'template',
           'payload': {
