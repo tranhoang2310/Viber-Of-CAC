@@ -34,6 +34,9 @@ controller.getCustomContentBlocks = () => {
         contentFolderName = config.MC_ContentCategories.CustomBlockPrefix, 
         assetTypeId = config.MC_AssetTypes.CustomBlock;
 
+    console.log('HoangT check right '+assetTypeId);
+    console.log('HoangT check left 2'+contentFolderName);
+
     let query = { 
         "leftOperand":
         {
@@ -217,7 +220,6 @@ controller.execute = async (req, res) => {
                 'Message_Content': ("text" in contentMessage ? contentMessage.text : contentMessage),
                 'Campaign_Journey_Name' : journeyId,
                 'Journey_Activity_ID': activityInstanceId,
-                'Message_Type': messageType
             };
 
             console.log('After Send message ',mcRecord);
