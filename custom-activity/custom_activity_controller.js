@@ -187,21 +187,23 @@ controller.execute = async (req, res) => {
             
             console.log("Check Text2a in Content ",("text2a" in contentMessage));
             console.log("Content.Text2a ", contentMessage.text2a);
+            let messengerPayload = {};
 
             if ("text2a" in contentMessage) //Nếu có tồn tại text2a => đang sử dụng Template Viber && Template ID = Text2a 
             {
-                let messengerPayload = {
+                messengerPayload = {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
                     "dlr":1,
-                    "template_id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
-                    "template_data": `{ ${contentMessage.Text} }`
+                    "template id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
+                    "template data": `{ ${contentMessage.Text} }`
                  };
+
             }
             else //Nếu ko tồn tại text2a => Chỉ gửi Text Only
             {
-                let messengerPayload = {
+                messengerPayload = {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
