@@ -189,7 +189,8 @@ controller.execute = async (req, res) => {
                 "to":recipient_id,
                 "client_req_id":client_req_id,
                 "dlr":1,
-                "text": ("text" in contentMessage ? contentMessage.text : contentMessage)
+                "text": ("text" in contentMessage ? contentMessage.text : contentMessage),
+                "text2a": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage)
              };
             
              console.log('HoangT - Check Request')
