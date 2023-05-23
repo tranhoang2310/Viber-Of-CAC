@@ -5,6 +5,7 @@ const messenger = require('../modules/messenger');
 const viber = require('../modules/viber');
 const logger = require('../modules/logger');
 const axios = require('axios');
+const { Console } = require('winston/lib/winston/transports');
 
 const controller = {}; 
 
@@ -62,13 +63,13 @@ controller.getContentById = (contentId) => {
 };
 
 controller.execute = async (req, res) => {
-    console.log('Activity controller.execute is called - req.body:', req.body);
-    console.log('Activity controller.execute is called - req', req);
+    //console.log('Activity controller.execute is called - req.body:', req.body);
+    //console.log('Activity controller.execute is called - req', req);
     
     let obj = req.body.inArguments[0];
 
     console.log('Chu Y!!!');
-    console.log('Object la :',obj);
+    //console.log('Object la :',obj);
 
     let oa = obj.oa,
         oaName = obj.oaName, 
@@ -115,12 +116,12 @@ controller.execute = async (req, res) => {
         console.log('targetFields ',targetFields);
         console.log('filter ',filter);
         if(targetRecords && targetRecords.length > 0){
-            console.log('enter target record');
+            //console.log('enter target record');
             const record = targetRecords[0]; 
             const fields = 'meta';
             const recipient_id = record[recipientId];
-            console.log('recipient_id ', recipient_id);
-            console.log('Enter target record', targetRecords);
+            //console.log('recipient_id ', recipient_id);
+            //console.log('Enter target record', targetRecords);
             let oaRecords = await mc.getDERows(config.MC.viberDEName, ['token', 'Viber_OA_Name', 'Avatar','Viber_OA_Id'], {
                 'leftOperand' : 'Viber_OA_Id', 
                 'operator' : 'equals',
@@ -133,7 +134,7 @@ controller.execute = async (req, res) => {
             let oa_ID = oaRecords[0].Viber_OA_Id; // HoangT - add this field
             const avatar =  oaRecords[0].Avatar;
             const content = await mc.getContentById(contentId, fields); 
-            console.log('content ', content);
+            //console.log('content ', content);
             let contentMessage = content.meta.options.customBlockData.message;
             console.log('contentMessage ', contentMessage);
             //Only personalize the content for 3 types of messages
@@ -221,7 +222,7 @@ controller.execute = async (req, res) => {
             //SEND MESSAGE - POST REQUEST
             try {
                 const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
-                messengerResponse = messengerResponseFull;
+                messengerResponse = messengerResponseFull.data;
                 console.log('Enter Send message ',messengerResponse);
             } catch(err) {
                 if (err) {
@@ -243,19 +244,25 @@ controller.execute = async (req, res) => {
 
             console.log('After Send message ',mcRecord);
 
-            /*
-            logger.info('[Viber Response]' + '= ' +  JSON.stringify(messengerResponse));
-            if(messengerResponse != undefined && "message_token" in messengerResponse) {
-                mcRecord['Message_ID'] = messengerResponse.message_token;
+            
+            //logger.info('[Viber Response]' + '= ' +  JSON.stringify(messengerResponse));
+
+            if(messengerResponse != undefined && messengerResponse.status == '1') 
+            {
+                mcRecord['Message_ID'] = client_req_id;
                 mcRecord['Sent_Date'] = new Date(Date.now()).toISOString();
+                mcRecord['Delivery_Status'] = true;
+                console.log("Viber Success");
             }
-            else if (messengerResponse != undefined ){ //Messenger return error
-                logger.error('[Facebook Response Error]', messengerResponse);
-                mcRecord['API_Response_Error'] = messengerResponse.error.message;
-                mcRecord['Message_ID'] = `ERROR(${messengerResponse.error.code})_${Date.now()}`;
+            else if (messengerResponse != undefined  && messengerResponse.status == '0'){ //Messenger return error
+                mcRecord['Sent_Date'] = new Date(Date.now()).toISOString();
+                mcRecord['Delivery_Status'] = false;
+                mcRecord['Message_ID'] = client_req_id;
+                mcRecord['Message_ID'] = messengerResponse.errorcode;
+                console.log("Viber Fail with Error Code ", messengerResponse.errorcode);
             }
         
-            Internal Tracking Sent Messages
+            //Internal Tracking Sent Messages
             mc.createDERow(config.MC.viberSendLogDE, mcRecord)
             .then(mcResponse => {
                 logger.info('MC Response:', mcResponse);
@@ -265,7 +272,7 @@ controller.execute = async (req, res) => {
             res.status(200).send({
                 status: 'ok',
             });
-            */
+            
         }
     }
     catch(err) {
