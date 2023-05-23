@@ -1,11 +1,13 @@
 const axios = require('axios');
 const config = require('../config.json');
+const base64 = require('base-64');
 const logger = require('./logger');
 const FormData = require('form-data');
 
 const viber = {};
 const username = config.Viber.User;
 const password = config.Viber.Pass;
+const auth = Buffer.from(username + ':' + password).toString('base64');
 
 viber.sendMessage = (token, payload) => {
     const options = {
@@ -17,7 +19,7 @@ viber.sendMessage = (token, payload) => {
             'Content-Type': 'application/json',
             //'X-Viber-Auth-Token' : token,
             'Accept':'application/json',
-            'Authorization':'Basic ' + base64.encode(username + ":" + password)
+            'Authorization':'Basic ' + auth
         }
     }
     /*
