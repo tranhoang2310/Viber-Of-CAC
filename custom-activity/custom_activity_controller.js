@@ -185,19 +185,20 @@ controller.execute = async (req, res) => {
             let req_id = new Date(Date.now()).toISOString();
             let client_req_id = req_id + ' ' + recipient_id;
             
-            console.log("Check Text2a in Content ",("text2a" in contentMessage));
-            console.log("Content.Text2a ", contentMessage.text2a);
             let messengerPayload = {};
 
             if ("text2a" in contentMessage) //Nếu có tồn tại text2a => đang sử dụng Template Viber && Template ID = Text2a 
             {
+                console.log("contentMessage.text la ",contentMessage.text);
+                console.log("template data la ",'{'+ contentMessage.text +'}');
+
                 messengerPayload = {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
                     "dlr":1,
                     "template id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
-                    "template data": JSON.parse(`{ ${contentMessage.text} }`)
+                    "template data": JSON.parse('{'+ contentMessage.text +'}' )
                  };
 
             }
