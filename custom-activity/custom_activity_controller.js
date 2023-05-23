@@ -215,7 +215,7 @@ controller.execute = async (req, res) => {
              console.log('HoangT - Check Request')
              console.log('messengerPayload ',messengerPayload);
 
-             logger.info('[Viber Request]' + '= ' +  JSON.stringify(messengerPayload));
+             //logger.info('[Viber Request]' + '= ' +  JSON.stringify(messengerPayload));
             let messengerResponse = undefined;
 
             //SEND MESSAGE - POST REQUEST
