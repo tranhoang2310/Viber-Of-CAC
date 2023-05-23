@@ -4,6 +4,8 @@ const logger = require('./logger');
 const FormData = require('form-data');
 
 const viber = {};
+const username = config.Viber.User;
+const password = config.Viber.Pass;
 
 viber.sendMessage = (token, payload) => {
     const options = {
@@ -15,7 +17,7 @@ viber.sendMessage = (token, payload) => {
             'Content-Type': 'application/json',
             //'X-Viber-Auth-Token' : token,
             'Accept':'application/json',
-            'Authorization':'Basic ' + token
+            'Authorization':'Basic ' + base64.encode(username + ":" + password)
         }
     }
     /*

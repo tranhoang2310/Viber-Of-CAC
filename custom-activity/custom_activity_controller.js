@@ -196,9 +196,8 @@ controller.execute = async (req, res) => {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
-                    "dlr":1,
                     "template id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
-                    "template data": JSON.parse('{'+ contentMessage.text +'}' )
+                    "template data": JSON.parse('{'+ contentMessage.text.toISOString() +'}' )
                  };
 
             }
@@ -208,7 +207,6 @@ controller.execute = async (req, res) => {
                     "from": oa_ID,
                     "to":recipient_id,
                     "client_req_id":client_req_id,
-                    "dlr":1,
                     "text": ("text" in contentMessage ? contentMessage.text : contentMessage),
                  };
             }
@@ -221,17 +219,17 @@ controller.execute = async (req, res) => {
             let messengerResponse = undefined;
 
             //SEND MESSAGE - POST REQUEST
-            // try {
-            //     const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
-            //     messengerResponse = messengerResponseFull.data;
-            //     console.log('Enter Send message ',messengerResponse);
-            // } catch(err) {
-            //     if (err.response.data) {
-            //         messengerResponse = err.response.data;
-            //         console.log("err->", err.response.data);
-            //         console.log('Enter Send message error',messengerResponse);
-            //     }
-            // } 
+            try {
+                const messengerResponseFull = await viber.sendMessage(token, messengerPayload);
+                messengerResponse = messengerResponseFull.data;
+                console.log('Enter Send message ',messengerResponse);
+            } catch(err) {
+                if (err.response.data) {
+                    messengerResponse = err.response.data;
+                    console.log("err->", err.response.data);
+                    console.log('Enter Send message error',messengerResponse);
+                }
+            } 
             
             //Internal Tracking Sent Messages
             /*
