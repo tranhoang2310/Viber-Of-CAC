@@ -184,14 +184,31 @@ controller.execute = async (req, res) => {
             //FOR SOUTH TELECOM REQUEST - HoangT
             let req_id = new Date(Date.now()).toISOString();
             let client_req_id = req_id + ' ' + recipient_id;
-            let messengerPayload = {
-                "from": oa_ID,
-                "to":recipient_id,
-                "client_req_id":client_req_id,
-                "dlr":1,
-                "text": ("text" in contentMessage ? contentMessage.text : contentMessage),
-                "text2a": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage)
-             };
+
+            if ("text2a" in contentMessage) //Nếu có tồn tại text2a => đang sử dụng Template Viber && Template ID = Text2a 
+            {
+                let messengerPayload = {
+                    "from": oa_ID,
+                    "to":recipient_id,
+                    "client_req_id":client_req_id,
+                    "dlr":1,
+                    "template_id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
+                    "template_data": "{" +  
+                        contentMessage.Text +
+                    "}" 
+                 };
+            }
+            else //Nếu ko tồn tại text2a => Chỉ gửi Text Only
+            {
+                let messengerPayload = {
+                    "from": oa_ID,
+                    "to":recipient_id,
+                    "client_req_id":client_req_id,
+                    "dlr":1,
+                    "text": ("text" in contentMessage ? contentMessage.text : contentMessage),
+                 };
+            }
+            
             
              console.log('HoangT - Check Request')
              console.log('messengerPayload ',messengerPayload);
