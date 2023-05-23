@@ -193,9 +193,7 @@ controller.execute = async (req, res) => {
                     "client_req_id":client_req_id,
                     "dlr":1,
                     "template_id": ("text2a" in contentMessage ? contentMessage.text2a : contentMessage),
-                    "template_data": "{" +  
-                        contentMessage.Text +
-                    "}" 
+                    "template_data": `{ ${contentMessage.Text} }`
                  };
             }
             else //Nếu ko tồn tại text2a => Chỉ gửi Text Only
